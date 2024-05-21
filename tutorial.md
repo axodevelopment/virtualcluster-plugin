@@ -38,3 +38,18 @@ https://www.npmjs.com/package/@openshift-console/dynamic-plugin-sdk
 Should read this before continuing lots of similar steps at the beginning
 
 https://www.redhat.com/en/blog/developing-an-openshift-dynamic-console-plugin-1
+
+# basic steps to get up and running
+
+cd root dir of proj
+
+yarn install
+
+yarn build
+
+fyi im running on mac , so going to make a manifest supporting mulitplatform if youare linx just use podman build
+
+docker buildx build --platform linux/amd64,linux/arm64 -t docker.io/<repo>/virtualcluster-plugin:latest --push .
+
+use the helm chart its easiest
+helm upgrade -i virtualcluster-plugin charts/openshift-console-plugin -n operator-virtualcluster --create-namespace --set plugin.image=docker.io/<repo>/virtualcluster-plugin:latest
