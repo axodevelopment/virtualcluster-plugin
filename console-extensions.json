@@ -3,18 +3,45 @@
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": "/example",
-      "component": { "$codeRef": "ExamplePage" }
+      "path": "/virtualclusters/Dashboard",
+      "component": {
+        "$codeRef": "Dashboard"
+      }
+    }
+  },
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": "/virtualclusters/TestVC",
+      "component": {
+        "$codeRef": "TestVC"
+      }
+    }
+  },
+  {
+    "type": "console.navigation/section",
+    "properties": {
+      "id": "virtualclusters-section",
+      "insertAfter": "builds",
+      "perspective": "admin",
+      "name": "VirtualClusters"
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "example",
-      "name": "%plugin__console-plugin-template~Plugin Example%",
-      "href": "/example",
-      "perspective": "admin",
-      "section": "home"
+      "section": "virtualclusters-section",
+      "href": "/virtualclusters/Dashboard",
+      "name": "Dashboard"
+    }
+  },
+  {
+    "type": "console.navigation/href",
+    "properties": {
+      "section": "virtualclusters-section",
+      "href": "/virtualclusters/TestVC",
+      "name": "TestVC"
     }
   }
 ]
