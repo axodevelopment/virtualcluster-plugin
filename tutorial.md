@@ -53,3 +53,18 @@ docker buildx build --platform linux/amd64,linux/arm64 -t docker.io/<repo>/virtu
 
 use the helm chart its easiest
 helm upgrade -i virtualcluster-plugin charts/openshift-console-plugin -n operator-virtualcluster --create-namespace --set plugin.image=docker.io/<repo>/virtualcluster-plugin:latest
+
+# need to setup local development here will be in a different branch or project for now
+
+for now using a local build of 4.16 and okd the default project from the project template.
+
+# caching
+
+not sure how it is caching but i get more success if I don't use :latest will test to see how this works
+
+latest image build
+also removed arm builds for now
+
+docker buildx build --platform linux/amd64 -t docker.io/axodevelopment/virtualcluster-plugin:v1.0.a --push .
+
+helm upgrade -i virtualcluster-plugin charts/openshift-console-plugin -n operator-virtualcluster --create-namespace --set plugin.image=docker.io/axodevelopment/virtualcluster-plugin:v1.0.a
