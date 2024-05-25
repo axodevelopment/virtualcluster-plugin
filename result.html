@@ -1,0 +1,112 @@
+http://testme-operator-virtualcluster-virtualcluster-system.apps.cluster-hlxs7.hlxs7.sandbox1351.opentlc.com/virtualcluster/api/virtualcluster/my-virtualclusters
+
+^
+http://testme-operator-virtualcluster-virtualcluster-system.apps.cluster-hlxs7.hlxs7.sandbox1351.opentlc.com/virtualcluster/api/virtualcluster/operator-virtualcluster
+
+
+
+
+
+http://testme-my-virtualclusters-virtualcluster-system.apps.cluster-hlxs7.hlxs7.sandbox1351.opentlc.com/virtualcluster/api/virtualcluster/my-virtualclusters
+http://testme-my-virtualclusters-virtualcluster-system.apps.cluster-hlxs7.hlxs7.sandbox1351.opentlc.com/virtualcluster/api/virtualcluster/my-virtualclusters
+
+http://testme-operator-virtualcluster-virtualcluster-system.apps.cluster-hlxs7.hlxs7.sandbox1351.opentlc.com/virtualcluster/api/virtualcluster/my-virtualclusters
+
+
+
+{
+"kind": "VirtualClusterList",
+"apiVersion": "organization.prototypes.com/v1",
+"metadata": {
+"resourceVersion": "859295"
+},
+"items": [
+{
+"kind": "VirtualCluster",
+"apiVersion": "organization.prototypes.com/v1",
+"metadata": {
+"name": "vc-primary",
+"namespace": "operator-virtualcluster",
+"uid": "82612b41-3eaf-47e1-b552-ec9948ebe9e1",
+"resourceVersion": "578730",
+"generation": 2,
+"creationTimestamp": "2024-05-25T07:10:43Z",
+"annotations": {
+"kubectl.kubernetes.io/last-applied-configuration":
+"{\"apiVersion\":\"organization.prototypes.com/v1\",\"kind\":\"VirtualCluster\",\"metadata\":{\"annotations\":{},\"name\":\"vc-primary\",\"namespace\":\"operator-virtualcluster\"},\"spec\":null}\n"
+},
+"managedFields": [
+{
+"manager": "kubectl-client-side-apply",
+"operation": "Update",
+"apiVersion": "organization.prototypes.com/v1",
+"time": "2024-05-25T07:10:43Z",
+"fieldsType": "FieldsV1",
+"fieldsV1": {
+"f:metadata": {
+"f:annotations": {
+".": {},
+"f:kubectl.kubernetes.io/last-applied-configuration": {}
+}
+}
+}
+},
+{
+"manager": "manager",
+"operation": "Update",
+"apiVersion": "organization.prototypes.com/v1",
+"time": "2024-05-25T07:19:49Z",
+"fieldsType": "FieldsV1",
+"fieldsV1": {
+"f:spec": {
+".": {},
+"f:virtualMachines": {}
+}
+}
+}
+]
+},
+"spec": {
+"virtualMachines": [
+"example"
+]
+},
+"status": {}
+},
+{
+"kind": "VirtualCluster",
+"apiVersion": "organization.prototypes.com/v1",
+"metadata": {
+"name": "vc-secondary",
+"namespace": "operator-virtualcluster",
+"uid": "f799436b-57bf-4cae-b3fd-8668e4222c7c",
+"resourceVersion": "570268",
+"generation": 1,
+"creationTimestamp": "2024-05-25T07:10:43Z",
+"annotations": {
+"kubectl.kubernetes.io/last-applied-configuration":
+"{\"apiVersion\":\"organization.prototypes.com/v1\",\"kind\":\"VirtualCluster\",\"metadata\":{\"annotations\":{},\"name\":\"vc-secondary\",\"namespace\":\"operator-virtualcluster\"},\"spec\":null}\n"
+},
+"managedFields": [
+{
+"manager": "kubectl-client-side-apply",
+"operation": "Update",
+"apiVersion": "organization.prototypes.com/v1",
+"time": "2024-05-25T07:10:43Z",
+"fieldsType": "FieldsV1",
+"fieldsV1": {
+"f:metadata": {
+"f:annotations": {
+".": {},
+"f:kubectl.kubernetes.io/last-applied-configuration": {}
+}
+}
+}
+}
+]
+},
+"spec": {},
+"status": {}
+}
+]
+}
