@@ -69,7 +69,8 @@
     "description": "Virtual Cluster Plugin",
     "exposedModules": {
       "Dashboard": "./components/Dashboard",
-      "TestVC": "./components/TestVC"
+      "TestVC": "./components/TestVC",
+      "Create": "./components/Create"
     },
     "dependencies": {
       "@console/pluginAPI": "*"

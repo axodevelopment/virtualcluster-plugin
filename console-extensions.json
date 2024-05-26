@@ -20,6 +20,16 @@
     }
   },
   {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": "/virtualclusters/Create",
+      "component": {
+        "$codeRef": "Create"
+      }
+    }
+  },
+  {
     "type": "console.navigation/section",
     "properties": {
       "id": "virtualclusters-section",
