@@ -28,10 +28,11 @@ export default function ExamplePage() {
   const [error, setError] = useState<string | null>(null);
   const namespace = 'operator-virtualcluster';
 
-
+  const version = 'Version: v1.0.o'
 
   useEffect(() => {
     const fetchVirtualClusters = async () => {
+      console.log('Version: ' + version)
       console.log('Fetching virtual clusters...');
 
       try {
@@ -45,16 +46,17 @@ export default function ExamplePage() {
 
         let newBaseURL = currentUrl.replace(
           'https://console-openshift-console',
-          'https://testme-operator-virtualcluster-virtualcluster-system'
+          'https://virtualcluster-api-virtualcluster-system'
         );
+
 
         newBaseURL = newBaseURL.replace(
           '.com/virtualclusters/TestVC',
-          '.com/virtualcluster/api/virtualcluster/operator-virtualcluster'
+          '.com'
         );
 
+        newBaseURL = newBaseURL + '/virtualcluster/api/virtualcluster/' + namespace
 
-        //const url = "http://testme-operator-virtualcluster-virtualcluster-system.apps.cluster-hlxs7.hlxs7.sandbox1351.opentlc.com/virtualcluster/api/virtualcluster/operator-virtualcluster"
         console.log(`Fetching data from URL: ${newBaseURL}`);
 
         const response = await fetch(newBaseURL, {
@@ -69,13 +71,6 @@ export default function ExamplePage() {
         if (!response.ok) {
           throw new Error(`Network response was not ok: ${response.statusText}`);
         }
-
-        /*
-        const responseText = await response.text();
-        console.log('Response text:', responseText);
-
-        const data = JSON.parse(responseText);
-        */
 
         const data: VirtualClusterList = await response.json();
 
@@ -109,7 +104,7 @@ export default function ExamplePage() {
   }
 
   if (error) {
-    return <div>Error: {error} Version: v1.0.l</div>;
+    return <div>Error: {error} {version}</div>;
   }
 
   return (
