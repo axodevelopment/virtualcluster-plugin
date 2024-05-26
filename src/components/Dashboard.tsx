@@ -29,7 +29,7 @@ export default function ExamplePage() {
   const [error, setError] = useState<string | null>(null);
   const namespace = 'operator-virtualcluster';
 
-  const version = 'Version: v1.0.p'
+  const version = 'Version: v1.0.q'
 
   useEffect(() => {
     const fetchVirtualClusters = async () => {
