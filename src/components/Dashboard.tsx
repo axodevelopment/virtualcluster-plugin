@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -5,31 +6,23 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { Page, PageSection, Title, Button, Flex, FlexItem } from '@patternfly/react-core';
+import { Page, PageSection, Title, Button, Flex, FlexItem, Label, List, ListItem} from '@patternfly/react-core';
 import './example.css';
 import { useEffect, useState } from 'react';
-import { VirtualCluster } from 'src/types';
+import { VirtualCluster, VirtualClusterList } from 'src/types';
 import { Link } from 'react-router-dom';
+import DesktopIcon from '@patternfly/react-icons/dist/esm/icons/desktop-icon';
 import { Table, Thead, Tr, Th, Td, Tbody } from '@patternfly/react-table';
 
-export interface VirtualClusterList {
-  kind: string;
-  apiVersion: string;
-  metadata: {
-    resourceVersion: string;
-  };
-  items: VirtualCluster[];
-}
+
 
 export default function ExamplePage() {
-  const { t } = useTranslation('plugin__console-plugin-template');
+  const { t } = useTranslation('plugin__my-openshift-console-plugin-template');
 
   const [virtualClusters, setVirtualClusters] = useState<VirtualCluster[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const namespace = 'operator-virtualcluster';
-
-  const version = 'Version: v1.0.q'
+  const version = 'Version: v1.0.r'
 
   useEffect(() => {
     const fetchVirtualClusters = async () => {
@@ -53,15 +46,15 @@ export default function ExamplePage() {
           '.com'
         );
 
-        newBaseURL = newBaseURL + '/virtualcluster/api/virtualcluster/' + namespace
+        // Dashboard shoudl just query all vc's
+        newBaseURL = newBaseURL + '/virtualcluster/api/virtualclusters'
 
         //TODO: REMOVE before going to actual app
-        //newBaseURL = "https://virtualcluster-api-virtualcluster-system.apps.cluster-r5h9v.r5h9v.sandbox1911.opentlc.com/virtualcluster/api/virtualcluster/operator-virtualcluster"
+        //newBaseURL = "https://virtualcluster-api-virtualcluster-system.apps.cluster-r5h9v.r5h9v.sandbox1911.opentlc.com/virtualcluster/api/virtualclusters"
 
         console.log(`Fetching data from URL: ${newBaseURL}`);
 
         const response = await fetch(newBaseURL, {
-
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -72,13 +65,6 @@ export default function ExamplePage() {
         if (!response.ok) {
           throw new Error(`Network response was not ok: ${response.statusText}`);
         }
-
-        /*
-        const responseText = await response.text();
-        console.log('Response text:', responseText);
-
-        const data = JSON.parse(responseText);
-        */
 
         const data: VirtualClusterList = await response.json();
 
@@ -103,9 +89,11 @@ export default function ExamplePage() {
     };
 
     fetchVirtualClusters();
-  }, [namespace]);
+  }, []);
+  //need to look at what dependency would make sense here
+  // thinking sse to force requery if a new vc gets added or something
 
-  const columns = ['Name', 'Namespace', 'VirtualMachines'];
+  const columns = ['Name', 'Namespace', 'Labels', 'VirtualMachines'];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -140,19 +128,51 @@ export default function ExamplePage() {
                   <Th>{columns[0]}</Th>
                   <Th>{columns[1]}</Th>
                   <Th>{columns[2]}</Th>
+                  <Th>{columns[3]}</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {virtualClusters.length > 0 ? (
                 virtualClusters.map((vc, index) => (
                   <Tr key={index}>
-                    <Td dataLabel={vc.metadata.name}>{vc.metadata.name}</Td>
+                    <Td dataLabel={vc.metadata.name}><div style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                        <div style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: '#007BFF',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontWeight: 'bold',
+                          marginRight: '10px'
+                        }}>
+                          VC
+                        </div>
+                        {vc.metadata.name}
+                      </div></Td>
                     <Td dataLabel={vc.metadata.namespace}>{vc.metadata.namespace}</Td>
                     <Td>
-                      <ul>
-                        {vc.spec?.virtualMachines?.map(vm => (
-                          <li key={vm}>{vm}</li> )) || <li> No virtual machines</li>}
-                      </ul>
+                      {vc.metadata.labels ? (
+                        Object.entries(vc.metadata.labels).map(([key, value]) => (
+                          <Label key={key} color="blue">
+                            {key}: {value}
+                          </Label>
+                        ))
+                      ) : (
+                        <span> </span>
+                      )}
+                    </Td>
+                    <Td>
+                      <List isPlain>
+                        {
+                          vc.spec?.virtualMachines?.map(vm => (<ListItem key={vm} icon={<DesktopIcon />} >{vm}</ListItem>)) || <ListItem>*</ListItem>
+                        }
+                      </List>
                     </Td>
                   </Tr>
                 ))

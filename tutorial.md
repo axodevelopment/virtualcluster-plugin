@@ -69,4 +69,4 @@ docker buildx build --platform linux/amd64 -t docker.io/axodevelopment/virtualcl
 
 helm upgrade -i virtualcluster-plugin charts/openshift-console-plugin -n operator-virtualcluster --create-namespace --set plugin.image=docker.io/axodevelopment/virtualcluster-plugin:v1.0.a
 
-v1.0.o is latest tested atm
+virtualcluster-plugin:v1.0.r latest tested atm
