@@ -70,10 +70,14 @@
     "exposedModules": {
       "Dashboard": "./components/Dashboard",
       "TestVC": "./components/TestVC",
-      "Create": "./components/Create"
+      "Create": "./components/Create",
+      "View": "./components/View"
     },
     "dependencies": {
       "@console/pluginAPI": "*"
     }
+  },
+  "dependencies": {
+    "@patternfly/react-table": "^4.112.39"
   }
 }

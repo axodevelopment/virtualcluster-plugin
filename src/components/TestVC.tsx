@@ -42,7 +42,7 @@ export default function ExamplePage() {
         );
 
         newBaseURL = newBaseURL.replace(
-          '.com/virtualclusters/Dashboard',
+          '.com/virtualclusters/TestVC',
           '.com'
         );
 

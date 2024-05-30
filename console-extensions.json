@@ -30,6 +30,16 @@
     }
   },
   {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": "/virtualclusters/View",
+      "component": {
+        "$codeRef": "View"
+      }
+    }
+  },
+  {
     "type": "console.navigation/section",
     "properties": {
       "id": "virtualclusters-section",

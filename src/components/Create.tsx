@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Page, PageSection, Title, Button, Flex, FlexItem, Alert } from '@patternfly/react-core';
+import {
+  Page,
+  PageSection,
+  Title,
+  Button,
+  Flex,
+  FlexItem,
+  Alert,
+} from '@patternfly/react-core';
 import { Link, useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import yaml from 'js-yaml';
@@ -74,7 +82,9 @@ spec:
   return (
     <>
       <Helmet>
-        <title data-test="create-page-title">{t('Create Virtual Cluster')}</title>
+        <title data-test="create-page-title">
+          {t('Create Virtual Cluster')}
+        </title>
       </Helmet>
       <Page>
         <PageSection variant="light">
@@ -124,7 +134,9 @@ spec:
                       type="button"
                       aria-label="Download code"
                       onClick={() => {
-                        const blob = new Blob([yamlContent], { type: 'text/yaml' });
+                        const blob = new Blob([yamlContent], {
+                          type: 'text/yaml',
+                        });
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
