@@ -6,12 +6,12 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { Page, PageSection, Title, Button, Flex, FlexItem, Label, List, ListItem} from '@patternfly/react-core';
+import { Page, PageSection, Title, Button, Flex, FlexItem, Label, List, ListItem, DescriptionListGroup, DescriptionListTerm, DescriptionListDescription, BackToTop} from '@patternfly/react-core';
 import './example.css';
 import { useEffect, useState } from 'react';
 import { VirtualCluster, VirtualClusterList } from 'src/types';
 import { Link } from 'react-router-dom';
-import DesktopIcon from '@patternfly/react-icons/dist/esm/icons/desktop-icon';
+import {PlusCircleIcon} from '@patternfly/react-icons';
 import { Table, Thead, Tr, Th, Td, Tbody } from '@patternfly/react-table';
 
 
@@ -50,7 +50,7 @@ export default function ExamplePage() {
         newBaseURL = newBaseURL + '/virtualcluster/api/virtualclusters'
 
         //TODO: REMOVE before going to actual app
-        //newBaseURL = "https://virtualcluster-api-virtualcluster-system.apps.cluster-r5h9v.r5h9v.sandbox1911.opentlc.com/virtualcluster/api/virtualclusters"
+        //newBaseURL = "https://virtualcluster-api-virtualcluster-system.apps.cluster-gfpzv.gfpzv.sandbox2794.opentlc.com/virtualcluster/api/virtualclusters"
 
         console.log(`Fetching data from URL: ${newBaseURL}`);
 
@@ -93,7 +93,7 @@ export default function ExamplePage() {
   //need to look at what dependency would make sense here
   // thinking sse to force requery if a new vc gets added or something
 
-  const columns = ['Name', 'Namespace', 'Labels', 'VirtualMachines'];
+  const columns = ['Name', 'Namespace', 'Labels', 'Selectors', 'VirtualMachines'];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -129,13 +129,14 @@ export default function ExamplePage() {
                   <Th>{columns[1]}</Th>
                   <Th>{columns[2]}</Th>
                   <Th>{columns[3]}</Th>
+                  <Th>{columns[4]}</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {virtualClusters.length > 0 ? (
                 virtualClusters.map((vc, index) => (
                   <Tr key={index}>
-                    <Td dataLabel={vc.metadata.name}><div style={{
+                    <Td dataLabel={vc.metadata.name} ><div style={{
                         display: 'flex',
                         alignItems: 'center'
                       }}>
@@ -168,10 +169,37 @@ export default function ExamplePage() {
                       )}
                     </Td>
                     <Td>
+                      {vc.spec?.nodeSelector?.labels ? (
+                          Object.entries(vc.spec?.nodeSelector.labels).map(([key, value]) => (
+                            <Label key={key} color="orange">
+                              {key}: {value}
+                            </Label>
+                          ))
+                        ) : (
+                        <span>*</span>
+                      )}
+                    </Td>
+                    <Td>
                       <List isPlain>
-                        {
-                          vc.spec?.virtualMachines?.map(vm => (<ListItem key={vm} icon={<DesktopIcon />} >{vm}</ListItem>)) || <ListItem>*</ListItem>
-                        }
+                        {vc.spec?.virtualMachines?.map(vm => (
+                          <ListItem key={vm.name}>
+                            <div>
+                              <DescriptionListGroup>
+                                <DescriptionListTerm>Virtual Machine Selector</DescriptionListTerm>
+                                <DescriptionListDescription>
+                                  <Button
+                                    variant="link"
+                                    isInline
+                                    icon={<PlusCircleIcon />}
+                                    onClick={() => window.location.href = `/k8s/ns/${vm.namespace}/kubevirt.io~v1~VirtualMachine/${vm.name}`}
+                                  >
+                                    {vm.name} in {vm.namespace}
+                                  </Button>
+                                </DescriptionListDescription>
+                              </DescriptionListGroup>
+                            </div>
+                          </ListItem>
+                        )) || <ListItem>*</ListItem>}
                       </List>
                     </Td>
                   </Tr>
@@ -184,6 +212,7 @@ export default function ExamplePage() {
               </Tbody>
             </Table>
         </PageSection>
+        <BackToTop isAlwaysVisible />
       </Page>
     </>
   );

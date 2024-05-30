@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -5,30 +6,23 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { Page, PageSection, Title } from '@patternfly/react-core';
+import { Page, PageSection, Title, Button, Flex, FlexItem, Label, List, ListItem} from '@patternfly/react-core';
 import './example.css';
 import { useEffect, useState } from 'react';
-import { VirtualCluster } from 'src/types';
+import { VirtualCluster, VirtualClusterList } from 'src/types';
+import { Link } from 'react-router-dom';
+import DesktopIcon from '@patternfly/react-icons/dist/esm/icons/desktop-icon';
 import { Table, Thead, Tr, Th, Td, Tbody } from '@patternfly/react-table';
 
-export interface VirtualClusterList {
-  kind: string;
-  apiVersion: string;
-  metadata: {
-    resourceVersion: string;
-  };
-  items: VirtualCluster[];
-}
+
 
 export default function ExamplePage() {
-  const { t } = useTranslation('plugin__console-plugin-template');
+  const { t } = useTranslation('plugin__my-openshift-console-plugin-template');
 
   const [virtualClusters, setVirtualClusters] = useState<VirtualCluster[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const namespace = 'operator-virtualcluster';
-
-  const version = 'Version: v1.0.o'
+  const version = 'Version: v1.0.r'
 
   useEffect(() => {
     const fetchVirtualClusters = async () => {
@@ -36,8 +30,6 @@ export default function ExamplePage() {
       console.log('Fetching virtual clusters...');
 
       try {
-        //const url = `/virtualcluster/api/virtualcluster/${namespace}`;
-        //
         const currentUrl = window.location.href;
         const currentHost = window.location.hostname;
 
@@ -49,18 +41,20 @@ export default function ExamplePage() {
           'https://virtualcluster-api-virtualcluster-system'
         );
 
-
         newBaseURL = newBaseURL.replace(
-          '.com/virtualclusters/TestVC',
+          '.com/virtualclusters/Dashboard',
           '.com'
         );
 
-        newBaseURL = newBaseURL + '/virtualcluster/api/virtualcluster/' + namespace
+        // Dashboard shoudl just query all vc's
+        newBaseURL = newBaseURL + '/virtualcluster/api/virtualclusters'
+
+        //TODO: REMOVE before going to actual app
+        //newBaseURL = "https://virtualcluster-api-virtualcluster-system.apps.cluster-gfpzv.gfpzv.sandbox2794.opentlc.com/virtualcluster/api/virtualclusters"
 
         console.log(`Fetching data from URL: ${newBaseURL}`);
 
         const response = await fetch(newBaseURL, {
-
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -95,9 +89,11 @@ export default function ExamplePage() {
     };
 
     fetchVirtualClusters();
-  }, [namespace]);
+  }, []);
+  //need to look at what dependency would make sense here
+  // thinking sse to force requery if a new vc gets added or something
 
-  const columns = ['Name', 'Namespace', 'VirtualMachines'];
+  const columns = ['Name', 'Namespace', 'Labels', 'Selectors', 'VirtualMachines'];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -114,7 +110,16 @@ export default function ExamplePage() {
       </Helmet>
       <Page>
         <PageSection variant="light">
-          <Title headingLevel="h1">{t('Dashboard')}</Title>
+          <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+            <FlexItem>
+              <Title headingLevel="h1">{t('Dashboard')}</Title>
+            </FlexItem>
+            <FlexItem>
+              <Link to="/virtualclusters/Create">
+                <Button variant="primary">Create</Button>
+              </Link>
+            </FlexItem>
+          </Flex>
         </PageSection>
         <PageSection variant="light">
             <Table>
@@ -123,19 +128,63 @@ export default function ExamplePage() {
                   <Th>{columns[0]}</Th>
                   <Th>{columns[1]}</Th>
                   <Th>{columns[2]}</Th>
+                  <Th>{columns[3]}</Th>
+                  <Th>{columns[4]}</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {virtualClusters.length > 0 ? (
                 virtualClusters.map((vc, index) => (
                   <Tr key={index}>
-                    <Td dataLabel={vc.metadata.name}>{vc.metadata.name}</Td>
+                    <Td dataLabel={vc.metadata.name}><div style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                        <div style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: '#007BFF',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontWeight: 'bold',
+                          marginRight: '10px'
+                        }}>
+                          VC
+                        </div>
+                        {vc.metadata.name}
+                      </div></Td>
                     <Td dataLabel={vc.metadata.namespace}>{vc.metadata.namespace}</Td>
                     <Td>
-                      <ul>
-                        {vc.spec?.virtualMachines?.map(vm => (
-                          <li key={vm}>{vm}</li> )) || <li> No virtual machines</li>}
-                      </ul>
+                      {vc.metadata.labels ? (
+                        Object.entries(vc.metadata.labels).map(([key, value]) => (
+                          <Label key={key} color="blue">
+                            {key}: {value}
+                          </Label>
+                        ))
+                      ) : (
+                        <span> </span>
+                      )}
+                    </Td>
+                    <Td>
+                      {vc.spec?.nodeSelector?.labels ? (
+                          Object.entries(vc.spec?.nodeSelector.labels).map(([key, value]) => (
+                            <Label key={key} color="orange">
+                              {key}: {value}
+                            </Label>
+                          ))
+                        ) : (
+                        <span>*</span>
+                      )}
+                    </Td>
+                    <Td>
+                      <List isPlain>
+                        {
+                          vc.spec?.virtualMachines?.map(vm => (<ListItem key={vm.name} icon={<DesktopIcon />} >{vm.name} in {vm.namespace}</ListItem>)) || <ListItem>*</ListItem>
+                        }
+                      </List>
                     </Td>
                   </Tr>
                 ))

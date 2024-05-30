@@ -13,6 +13,14 @@ export interface VirtualClusterSpec {
 }
 */
 
+export interface VirtualMachineRef {
+  name: string;
+  namespace: string;
+}
+
+export interface VirtualClusterNodeSelector {
+  labels?: { [key: string]: string };
+}
 export interface VirtualCluster extends K8sResourceCommon {
   apiVersion: string;
   kind: string;
@@ -23,7 +31,8 @@ export interface VirtualCluster extends K8sResourceCommon {
     [key: string]: any; // This allows other optional metadata fields
   };
   spec?: {
-    virtualMachines?: string[];
+    virtualMachines?: VirtualMachineRef[];
+    nodeSelector?: VirtualClusterNodeSelector;
   };
   status?: any; // Add specific fields as needed
 }
