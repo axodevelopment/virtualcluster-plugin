@@ -60,9 +60,11 @@ export default function ViewPage() {
         newBaseURL = newBaseURL + routeUrl;
 
         //TODO: REMOVE before going to actual app
+        /*
         newBaseURL =
           'https://virtualcluster-api-virtualcluster-system.apps.cluster-gfpzv.gfpzv.sandbox2794.opentlc.com' +
           routeUrl;
+        */
 
         console.log(`Fetching data from URL: ${newBaseURL}`);
 
