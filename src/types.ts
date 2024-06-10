@@ -1,26 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
-/*
-export interface VirtualCluster extends K8sResourceCommon {
-  spec: VirtualClusterSpec;
-  status?: VirtualClusterStatus;
-}
-
-
-export interface VirtualClusterSpec {
-  virtualMachines: string[];
-}
-*/
-
 export interface VirtualMachineRef {
   name: string;
   namespace: string;
 }
 
-export interface VirtualClusterNodeSelector {
-  labels?: { [key: string]: string };
+export interface NodeRef {
+  name: string;
 }
+
+export interface VirtualClusterSpec {
+  virtualMachines?: VirtualMachineRef[];
+  nodes?: NodeRef[];
+}
+
+export interface VirtualClusterStatus {
+  status?: string;
+}
+
 export interface VirtualCluster extends K8sResourceCommon {
   apiVersion: string;
   kind: string;
@@ -30,20 +28,8 @@ export interface VirtualCluster extends K8sResourceCommon {
     labels?: { [key: string]: string };
     [key: string]: any; // This allows other optional metadata fields
   };
-  spec?: {
-    virtualMachines?: VirtualMachineRef[];
-    nodeSelector?: VirtualClusterNodeSelector;
-  };
-  status?: any; // Add specific fields as needed
-}
-
-export interface VirtualClusterSpec {
-  virtualMachines: string[];
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface VirtualClusterStatus {
-  // Define your status fields here
+  spec?: VirtualClusterSpec;
+  status?: VirtualClusterStatus;
 }
 
 export interface VirtualClusterList extends K8sResourceCommon {

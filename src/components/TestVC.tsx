@@ -6,18 +6,22 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { Page, PageSection, Title, Button, Flex, FlexItem, Label, List, ListItem} from '@patternfly/react-core';
+import { Page, PageSection, Title, Button, Flex, FlexItem, Label, List, ListItem, DescriptionListGroup, DescriptionListDescription, BackToTop,
+  EmptyState,
+  EmptyStateIcon,
+  EmptyStateBody
+} from '@patternfly/react-core';
 import './example.css';
 import { useEffect, useState } from 'react';
 import { VirtualCluster, VirtualClusterList } from 'src/types';
 import { Link } from 'react-router-dom';
-import DesktopIcon from '@patternfly/react-icons/dist/esm/icons/desktop-icon';
+import {PlusCircleIcon, CubesIcon} from '@patternfly/react-icons';
 import { Table, Thead, Tr, Th, Td, Tbody } from '@patternfly/react-table';
 
 
 
 export default function ExamplePage() {
-  const { t } = useTranslation('plugin__my-openshift-console-plugin-template');
+  const { t } = useTranslation('plugin__my-openshift-console-plugin');
 
   const [virtualClusters, setVirtualClusters] = useState<VirtualCluster[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +46,7 @@ export default function ExamplePage() {
         );
 
         newBaseURL = newBaseURL.replace(
-          '.com/virtualclusters/TestVC',
+          '.com/virtualclusters/Dashboard',
           '.com'
         );
 
@@ -68,8 +72,8 @@ export default function ExamplePage() {
 
         const data: VirtualClusterList = await response.json();
 
-        console.log(Array.isArray(data.items))
-        console.log(data.items)
+        console.log(Array.isArray(data.items));
+        console.log(data.items);
 
         if (data && Array.isArray(data.items)) {
           console.log('Data fetched:', data);
@@ -93,7 +97,7 @@ export default function ExamplePage() {
   //need to look at what dependency would make sense here
   // thinking sse to force requery if a new vc gets added or something
 
-  const columns = ['Name', 'Namespace', 'Labels', 'Selectors', 'VirtualMachines'];
+  const columns = ['Name', 'Namespace', 'Labels', 'Nodes', 'VirtualMachines', ''];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -122,6 +126,20 @@ export default function ExamplePage() {
           </Flex>
         </PageSection>
         <PageSection variant="light">
+          {virtualClusters.length == 0 ? (
+
+          <EmptyState>
+            <EmptyStateIcon icon={CubesIcon} />
+            <Title headingLevel="h4" size="lg">
+              No Virtual Clusters
+            </Title>
+            <EmptyStateBody>
+              No Virtual Clusters found click create to create a Virtual Cluster
+            </EmptyStateBody>
+            <Link to="/virtualclusters/Create"><Button variant="primary">Create</Button></Link>
+          </EmptyState>
+
+            ) : (
             <Table>
               <Thead>
                 <Tr>
@@ -133,10 +151,9 @@ export default function ExamplePage() {
                 </Tr>
               </Thead>
               <Tbody>
-                {virtualClusters.length > 0 ? (
-                virtualClusters.map((vc, index) => (
+                {virtualClusters.map((vc, index) => (
                   <Tr key={index}>
-                    <Td dataLabel={vc.metadata.name}><div style={{
+                    <Td dataLabel={vc.metadata.name} ><div style={{
                         display: 'flex',
                         alignItems: 'center'
                       }}>
@@ -169,33 +186,54 @@ export default function ExamplePage() {
                       )}
                     </Td>
                     <Td>
-                      {vc.spec?.nodeSelector?.labels ? (
-                          Object.entries(vc.spec?.nodeSelector.labels).map(([key, value]) => (
-                            <Label key={key} color="orange">
-                              {key}: {value}
-                            </Label>
-                          ))
-                        ) : (
+                      {vc.spec?.nodes ? (
+                        vc.spec.nodes.map((node, index) => (
+                          <Label key={index} color="orange">
+                            {node.name}
+                          </Label>
+                        ))
+                      ) : (
                         <span>*</span>
                       )}
                     </Td>
                     <Td>
                       <List isPlain>
-                        {
-                          vc.spec?.virtualMachines?.map(vm => (<ListItem key={vm.name} icon={<DesktopIcon />} >{vm.name} in {vm.namespace}</ListItem>)) || <ListItem>*</ListItem>
-                        }
+                        {vc.spec?.virtualMachines?.map(vm => (
+                          <ListItem key={vm.name}>
+                            <div>
+                              <DescriptionListGroup>
+
+                                <DescriptionListDescription>
+                                  <Button
+                                    variant="link"
+                                    isInline
+                                    icon={<PlusCircleIcon />}
+                                    onClick={() => window.location.href = `/k8s/ns/${vm.namespace}/kubevirt.io~v1~VirtualMachine/${vm.name}`}
+                                  >
+                                    {vm.name}
+                                  </Button> in <b>{vm.namespace}</b>
+                                </DescriptionListDescription>
+                              </DescriptionListGroup>
+                            </div>
+                          </ListItem>
+                        )) || <ListItem>*</ListItem>}
                       </List>
                     </Td>
+                    <Td>
+                      <Link to={{
+                        pathname: '/virtualclusters/View',
+                        state: { name: vc.metadata.name, namespace: vc.metadata.namespace }
+                      }}>
+                        <Button variant="primary">Edit</Button>
+                      </Link>
+                    </Td>
                   </Tr>
-                ))
-              ) : (
-                <Tr>
-                  <Td colSpan={3}>No Virtual Clusters found</Td>
-                </Tr>
-              )}
+                ))}
               </Tbody>
             </Table>
+            )}
         </PageSection>
+        <BackToTop isAlwaysVisible />
       </Page>
     </>
   );

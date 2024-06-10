@@ -97,7 +97,7 @@ export default function ExamplePage() {
   //need to look at what dependency would make sense here
   // thinking sse to force requery if a new vc gets added or something
 
-  const columns = ['Name', 'Namespace', 'Labels', 'Selectors', 'VirtualMachines', ''];
+  const columns = ['Name', 'Namespace', 'Labels', 'Nodes', 'VirtualMachines', ''];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -186,13 +186,13 @@ export default function ExamplePage() {
                       )}
                     </Td>
                     <Td>
-                      {vc.spec?.nodeSelector?.labels ? (
-                          Object.entries(vc.spec?.nodeSelector.labels).map(([key, value]) => (
-                            <Label key={key} color="orange">
-                              {key}: {value}
-                            </Label>
-                          ))
-                        ) : (
+                      {vc.spec?.nodes ? (
+                        vc.spec.nodes.map((node, index) => (
+                          <Label key={index} color="orange">
+                            {node.name}
+                          </Label>
+                        ))
+                      ) : (
                         <span>*</span>
                       )}
                     </Td>

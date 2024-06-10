@@ -180,14 +180,12 @@ export default function ViewPage() {
           <DescriptionListGroup>
             <DescriptionListTerm>Node Labels</DescriptionListTerm>
             <DescriptionListDescription>
-              {virtualCluster.spec?.nodeSelector?.labels ? (
-                Object.entries(virtualCluster.spec?.nodeSelector.labels).map(
-                  ([key, value]) => (
-                    <Label key={key} color="orange">
-                      {key}: {value}
-                    </Label>
-                  ),
-                )
+              {virtualCluster.spec?.nodes ? (
+                virtualCluster.spec.nodes.map((node, index) => (
+                  <Label key={index} color="orange">
+                    {node.name}
+                  </Label>
+                ))
               ) : (
                 <span>*</span>
               )}
@@ -255,17 +253,7 @@ export default function ViewPage() {
                     in <b>{vm.namespace}</b>
                   </Td>
                   <Td>
-                    {virtualCluster.spec?.nodeSelector?.labels ? (
-                      Object.entries(
-                        virtualCluster.spec?.nodeSelector.labels,
-                      ).map(([key, value]) => (
-                        <Label key={key} color="orange">
-                          {key}: {value}
-                        </Label>
-                      ))
-                    ) : (
-                      <span>*</span>
-                    )}
+                    {virtualCluster.spec ? <span>!!!</span> : <span>!!!</span>}
                   </Td>
                 </Tr>
               ))
