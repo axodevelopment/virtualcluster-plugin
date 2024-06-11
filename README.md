@@ -174,14 +174,14 @@ the message for the current language from the `plugin__console-plugin-template`
 namespace. For example:
 
 ```json
-  {
-    "type": "console.navigation/section",
-    "properties": {
-      "id": "admin-demo-section",
-      "perspective": "admin",
-      "name": "%plugin__console-plugin-template~Plugin Template%"
-    }
+{
+  "type": "console.navigation/section",
+  "properties": {
+    "id": "admin-demo-section",
+    "perspective": "admin",
+    "name": "%plugin__console-plugin-template~Plugin Template%"
   }
+}
 ```
 
 Running `yarn i18n` updates the JSON files in the `locales` folder of the
@@ -210,10 +210,11 @@ Steps to generate reports
 
 1. In command prompt, navigate to root folder and execute the command `yarn run cypress-merge`
 2. Then execute command `yarn run cypress-generate`
-The cypress-report.html file is generated and should be in (/integration-tests/screenshots) directory
+   The cypress-report.html file is generated and should be in (/integration-tests/screenshots) directory
 
 ## References
 
 - [Console Plugin SDK README](https://github.com/openshift/console/tree/master/frontend/packages/console-dynamic-plugin-sdk)
 - [Customization Plugin Example](https://github.com/spadgett/console-customization-plugin)
 - [Dynamic Plugin Enhancement Proposal](https://github.com/openshift/enhancements/blob/master/enhancements/console/dynamic-plugins.md)
+  s
